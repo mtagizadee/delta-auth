@@ -3,10 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Session } from './entities/session.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { FindOptionsWhere } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,8 @@ export class AuthService {
 
 
     async login(ip: string, loginUserDto: LoginUserDto) {
+        await this.deleteExpiredSessions();
+
         try {
             const user = await this.usersService.findOne(loginUserDto.email);
             const session = await this.createSession(user, ip);
@@ -34,6 +37,7 @@ export class AuthService {
         const accessToken = v4();
         const expiresAt = new Date();
         expiresAt.setDate(expiresAt.getDate() + 1);
+
         try {
             const session = this.sessionRepository.create({ accessToken, user, expiresAt, ip });
             return await this.sessionRepository.save(session);
@@ -43,5 +47,12 @@ export class AuthService {
             }
             throw error;
         }
+    }
+
+    private async deleteExpiredSessions() {
+        const currentDate = new Date();
+        return await this.sessionRepository.delete({
+            expiresAt: LessThan(currentDate)
+        });
     }
 }
