@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, Entity, Column, OneToOne, JoinColumn } from 'typeorm'
+import { PrimaryGeneratedColumn, Entity, Column, ManyToOne } from 'typeorm'
 import { User } from 'src/users/entities/user.entity';
 
 @Entity()
@@ -16,13 +16,9 @@ export class Session {
     @Column({ type: 'timestamp' })
     expiresAt: Date;
 
-    @Column({
-        type: 'varchar',
-        unique: true
-    })
+    @Column({ type: 'varchar' })
     ip: string;
 
-    @OneToOne(() => User, { onDelete: "CASCADE" })
-    @JoinColumn()
+    @ManyToOne(() => User, (user) => user.sessions, { onDelete: "CASCADE" })
     user: User
 }
