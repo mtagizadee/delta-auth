@@ -22,15 +22,19 @@ export class AuthService {
 
         try {
             const user = await this.usersService.findOne(loginUserDto.email);
-            const session = await this.createSession(user, ip);
-            return { access_token: session.accessToken }
+            if (user.ipAddresses.some(ipAddress => ipAddress.ip === ip)) {
+                const session = await this.createSession(user, ip);
+                return { access_token: session.accessToken }
+            } else {
+
+            }
         } catch (error) {
             throw error;
         }
     }
 
     signup(ip: string, createUserDto: CreateUserDto) {
-        return this.usersService.create(createUserDto);
+        return this.usersService.create(createUserDto, ip);
     }
 
     private async createSession(user: User, ip: string) {

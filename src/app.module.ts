@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { Session } from './auth/entities/session.entity';
+import { IP } from './users/entities/IP.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { Session } from './auth/entities/session.entity';
         username: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWORD,
         database: process.env.DATABASE_SCHEMA,
-        entities: [User, Session],
+        entities: [User, Session, IP],
         synchronize: true
       }),
     }),

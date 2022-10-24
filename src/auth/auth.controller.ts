@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { IpAddress } from 'src/decorator/IpAddress.decorator';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -16,5 +16,10 @@ export class AuthController {
     @Post('signup')
     signup(@IpAddress() ip: string, @Body() createUserDto: CreateUserDto) {
         return this.authService.signup(ip, createUserDto);
+    }
+
+    @Get('ip')
+    getIp(@IpAddress() ip: string) {
+        return ip;
     }
 }
