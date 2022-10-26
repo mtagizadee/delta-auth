@@ -24,10 +24,10 @@ export class UsersService {
     await querryRunner.startTransaction();
     try {
       const userData = this.usersRepository.create({ ...createUserDto, id: userId });
-      const user = await this.usersRepository.save(userData);
+      const user = await querryRunner.manager.save(userData);
 
       const ipAddressData = this.ipAdressesRepository.create({ user, ip, id: ipAddressId });
-      const ipAddress = await this.ipAdressesRepository.save(ipAddressData);
+      const ipAddress = await querryRunner.manager.save(ipAddressData);
 
       await querryRunner.commitTransaction();
       return ipAddress;

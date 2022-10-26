@@ -6,6 +6,7 @@ import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { Session } from './auth/entities/session.entity';
 import { IP } from './users/entities/IP.entity';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -25,7 +26,8 @@ import { IP } from './users/entities/IP.entity';
       }),
     }),
     AuthModule,
-    UsersModule
+    UsersModule,
+    MailModule
   ]
 })
 export class AppModule { }

@@ -7,7 +7,6 @@ import { LessThan, Repository } from 'typeorm';
 import { v4 } from 'uuid';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { FindOptionsWhere } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -22,11 +21,12 @@ export class AuthService {
 
         try {
             const user = await this.usersService.findOne(loginUserDto.email);
-            if (user.ipAddresses.some(ipAddress => ipAddress.ip === ip)) {
+            const hasIp: boolean = user.ipAddresses.some(ipAddress => ipAddress.ip === ip);
+            if (hasIp) {
                 const session = await this.createSession(user, ip);
                 return { access_token: session.accessToken }
             } else {
-
+                // TODO: send email confirmation
             }
         } catch (error) {
             throw error;
